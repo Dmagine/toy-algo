@@ -1,6 +1,7 @@
 import argparse
 import os
 
+import anylearn
 import numpy as np
 import torch
 import torchvision as tv
@@ -22,21 +23,21 @@ args = parser.parse_args()
 print(f"Args: {args}")
 print("Environ: {}".format({k: v for k, v in os.environ.items()}))
 
-datadir = args.datadir
+datadir = anylearn.get_dataset("yhuang/CIFAR-100").download()
 print(f"Loading dataset from {datadir}")
 train_set = tv.datasets.CIFAR100(datadir, train=True, download=False)
 valid_set = tv.datasets.CIFAR100(datadir, train=False, download=False)
 print(f"Using a training set with {len(train_set)} images.")
 print(f"Using a validation set with {len(valid_set)} images.")
 
-modeldir = args.modeldir
+modeldir = anylearn.get_model("yhuang/BiT-pretrained").download()
 model_path = os.path.join(modeldir, f"{args.model}.npz")
 print(f"Loading model from {model_path}")
 model = models.KNOWN_MODELS[args.model](head_size=len(valid_set.classes), zero_head=True)
 model.load_from(np.load(model_path))
 print(f"Loaded model: {model._get_name()}")
 
-checkpointdir = args.checkpointdir
+checkpointdir = anylearn.get_task_output('TRAId8be326641f78134edaa51385cae').download()
 weigth_path = os.path.join(checkpointdir, "weights_resnet.pkl")
 print(f"Loading weights from {weigth_path}")
 with open(weigth_path, 'rb') as f:
