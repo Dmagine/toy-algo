@@ -1,0 +1,2 @@
+anylearn==0.17.0a2
+numpy
